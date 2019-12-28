@@ -38,13 +38,18 @@ export class GameComponent implements OnInit {
 
     });
 
+    this.assignerValeursAuxCellule(this.casesArray.slice());
 
-    
-
+    this.cases.forEach((row) => {
+      for (let i = 0; i < 5; i++) {
+        // Select a value between 0 and 8 (9 not inclusive)
+        const cell = row[this.getRandomNumber(0, 9)];
+        cell.hide();
+        cell.peutEtreRemplie = true;
+      }
+    });
 
     console.log(this.cases);
-
-
   }
 
    determinerLigne(c:Case): Set<Case>{
@@ -77,7 +82,7 @@ export class GameComponent implements OnInit {
     return resulat;
   }
 
-  
+
   determinerCarre(c:Case): Set<Case>{
     let resulat = new  Set<Case>();
 
@@ -95,6 +100,62 @@ export class GameComponent implements OnInit {
 
     resulat.delete(c);
     return resulat;
+  }
+
+  assignerValeursAuxCellule(cellules: Case[]) {
+    const cell = cellules.shift();
+    const possibleValues = this.shuffleArray(this.getPossibleValuesForCell(cell));
+
+    for (const value of possibleValues) {
+      cell.valeur = value;
+
+      if (cellules.length === 0) {
+        return true;
+      }
+
+      if (this.assignerValeursAuxCellule(cellules)) {
+        return true;
+      }
+
+  }
+}
+
+
+  private getPossibleValuesForCell(cell: Case): number[] {
+    const possibleValues: number[] = [];
+    for (let i = this.MIN_VALUE; i <= this.MAX_VALUE; i++) {
+      possibleValues.push(i);
+    }
+
+    const neighborValues: number[] = [];
+    cell.ligne.forEach((c) => neighborValues.push(c.valeur));
+    cell.colonne.forEach((c) => neighborValues.push(c.valeur));
+    cell.care.forEach((c) => neighborValues.push(c.valeur));
+
+    // For each value found in neighbors, wipe the entry from the possible options
+    neighborValues.forEach((value) => {
+      const index = possibleValues.indexOf(value);
+      if (index !== -1) {
+        possibleValues.splice(index, 1);
+      }
+    });
+
+    return possibleValues;
+  }
+
+  private shuffleArray(array: number[]): number[] {
+    const _array = array.slice();
+
+    for (let i = _array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [_array[i], _array[j]] = [_array[j], _array[i]];
+    }
+
+    return _array;
+  }
+
+  private getRandomNumber(min: number, max: number): number {
+    return Math.floor(Math.random() * max + min);
   }
 
   ngOnInit() {
