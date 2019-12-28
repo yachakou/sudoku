@@ -8,6 +8,10 @@ import { HomeComponent } from './home/home.component';
 import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 import { RouterModule, Routes } from '@angular/router';
 import { GameComponent } from './game/game.component';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatCardModule} from '@angular/material/card';
+import {MatButtonModule} from '@angular/material/button';
 
 
 const appRoutes: Routes = [
@@ -39,7 +43,11 @@ const appRoutes: Routes = [
     ),
     BrowserModule,
     BrowserAnimationsModule,
-    MatChipsModule
+    MatChipsModule,
+    MatExpansionModule,
+    MatToolbarModule,
+    MatCardModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

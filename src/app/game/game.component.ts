@@ -52,39 +52,38 @@ export class GameComponent implements OnInit {
     console.log(this.cases);
   }
 
-   determinerLigne(c:Case): Set<Case>{
+  determinerLigne(c: Case): Set<Case> {
 
     let ligne = c.positionX;
 
-    let resulat = new  Set<Case>();
+    let resulat = new Set<Case>();
 
     this.casesArray.forEach(element => {
-      if((element.positionX == ligne)){
-          resulat.add(element);
+      if ((element.positionX == ligne)) {
+        resulat.add(element);
       }
     });
     resulat.delete(c);
     return resulat;
   }
 
-  determinerColone(c:Case): Set<Case>{
+  determinerColone(c: Case): Set<Case> {
 
     let colonne = c.positionY;
 
-    let resulat = new  Set<Case>();
+    let resulat = new Set<Case>();
 
     this.casesArray.forEach(element => {
-      if((element.positionY == colonne)){
-          resulat.add(element);
+      if ((element.positionY == colonne)) {
+        resulat.add(element);
       }
     });
     resulat.delete(c);
     return resulat;
   }
 
-
-  determinerCarre(c:Case): Set<Case>{
-    let resulat = new  Set<Case>();
+  determinerCarre(c: Case): Set<Case> {
+    let resulat = new Set<Case>();
 
     let colonne = c.positionY;
     let ligne = c.positionX;
@@ -92,8 +91,8 @@ export class GameComponent implements OnInit {
     const debutLigne = Math.floor(c.positionX / taille) * taille;
     const debutColonne = Math.floor(c.positionY / taille) * taille;
 
-    for(let i=debutLigne;  i<debutLigne + taille; i++){
-      for(let y=debutColonne;  y<debutColonne + taille; y++){
+    for (let i = debutLigne; i < debutLigne + taille; i++) {
+      for (let y = debutColonne; y < debutColonne + taille; y++) {
         resulat.add(this.cases[i][y]);
       }
     }
@@ -117,8 +116,8 @@ export class GameComponent implements OnInit {
         return true;
       }
 
+    }
   }
-}
 
 
   private getPossibleValuesForCell(cell: Case): number[] {

@@ -1,0 +1,16 @@
+.home {
+    margin: 1% auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+  }
+  
