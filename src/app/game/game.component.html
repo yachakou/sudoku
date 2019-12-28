@@ -1,0 +1,10 @@
+
+<div class="board">
+    <ng-container *ngFor="let ligne of cases">
+      <ng-container *ngFor="let cell of ligne">
+        <div class="cell" >
+          <span >{{cell.valeur}}</span>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>

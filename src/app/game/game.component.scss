@@ -1,0 +1,103 @@
+// Variables
+$color-neighbors-highlight: #adddef;
+$color-cell-selected: #bce1e8;
+$color-value-selection: #95d3e4;
+$border-color: black;
+
+.cell {
+  display: flex;
+  flex: 1 1 calc(100% / 9 - 2px); // 9 items per line
+  height: calc(100% / 9 - 2px); // 9 items per line
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  color: black;
+  text-align: center;
+  line-height: 65px;
+  font-size: 1.3vw;
+  cursor: pointer;
+  transition-duration: 0.2s;
+  user-select: none;
+
+  &:active {
+    transform: scale(0.9);
+    transition-duration: 0.1s;
+  }
+
+  &.color-light-green {
+    background: rgba(30, 180, 130, 1);
+  }
+  &.color-green {
+    background: rgba(0, 255, 200, 0.5);
+  }
+  &.color-blue {
+    background: rgba(50, 170, 255, 0.8);
+  }
+  &.color-yellow {
+    background: rgba(255, 255, 50, 0.7);
+  }
+
+  &.selected {
+    background-color: $color-cell-selected;
+  }
+
+  &.highlighted {
+    background-color: $color-neighbors-highlight;
+  }
+
+  &.isConflicting {
+    color: red;
+    font-weight: bolder;
+  }
+
+  &.isFillable {
+    font-weight: bold;
+  }
+}
+
+.value-selection {
+  display: flex;
+  margin: 1% auto;
+  width: 40vw;
+
+  .cell {
+    border-bottom: 2px solid transparent;
+    transition: border-bottom 0.2s ease-in-out;
+
+    &:hover {
+      border-bottom: 2px solid $color-value-selection;
+    }
+  }
+}
+
+.board {
+  width: 40vw;
+  height: 40vw;
+  margin: 1% auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  border: 1px solid $border-color;
+
+  // Add styles to cells that compose the game board
+  .cell {
+    border-left: 1px solid $border-color;
+    border-top: 1px solid $border-color;
+
+    &:nth-child(3n) {
+      border-right: 1px solid $border-color;
+    }
+
+    &:nth-child(27n),
+    &:nth-child(27n-1),
+    &:nth-child(27n-2),
+    &:nth-child(27n-3),
+    &:nth-child(27n-4),
+    &:nth-child(27n-5),
+    &:nth-child(27n-6),
+    &:nth-child(27n-7),
+    &:nth-child(27n-8) {
+      border-bottom: 1px solid $border-color;
+    }
+  }
+}
