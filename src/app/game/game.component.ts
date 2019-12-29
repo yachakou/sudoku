@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Case } from '../case';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-game',
@@ -8,15 +9,24 @@ import { Case } from '../case';
 })
 export class GameComponent implements OnInit {
 
+  @Input() level: number;
+
   private cases: Case[][];
   private casesArray: Case[] = [];
+  private valeurPossible: Set<number> = new Set<number>();
+
 
   private readonly MIN_VALUE: number = 0;
   private readonly MAX_VALUE: number = 9;
   private readonly DEFAULT_VALUE: number = 0;
+  private caseSelectionne: Case;
+  private nbErreurs:number = 0;
 
 
-  constructor() {
+  constructor(private route: ActivatedRoute) {
+
+    let id: number = this.route.snapshot.params['level'];
+    this.level = id;
 
     this.cases = [];
 
@@ -41,11 +51,11 @@ export class GameComponent implements OnInit {
     this.assignerValeursAuxCellule(this.casesArray.slice());
 
     this.cases.forEach((row) => {
-      for (let i = 0; i < 5; i++) {
-        // Select a value between 0 and 8 (9 not inclusive)
+      for (let i = 0; i < this.level; i++) {
         const cell = row[this.getRandomNumber(0, 9)];
         cell.hide();
         cell.peutEtreRemplie = true;
+        this.valeurPossible.add(cell.valeur);
       }
     });
 
@@ -84,9 +94,6 @@ export class GameComponent implements OnInit {
 
   determinerCarre(c: Case): Set<Case> {
     let resulat = new Set<Case>();
-
-    let colonne = c.positionY;
-    let ligne = c.positionX;
     const taille = 3;
     const debutLigne = Math.floor(c.positionX / taille) * taille;
     const debutColonne = Math.floor(c.positionY / taille) * taille;
@@ -158,6 +165,27 @@ export class GameComponent implements OnInit {
   }
 
   ngOnInit() {
+   }
+
+  caseSelectionner(caseSelectionner: Case) {
+    if (this.caseSelectionne) {
+      this.caseSelectionne.estSelectionnee = false;
+    }
+    if (caseSelectionner.peutEtreRemplie) {
+      caseSelectionner.estSelectionnee = !caseSelectionner.estSelectionnee;
+      this.caseSelectionne = caseSelectionner;
+    }
+    console.log(caseSelectionner);
+
   }
 
+  valeurChoisi(n:number){
+    if (this.caseSelectionne) {
+      if(this.caseSelectionne.valeur == n){
+        this.caseSelectionne.aAfficher = true;
+      } else {
+        this.nbErreurs ++;
+      }
+    }
+  }
 }

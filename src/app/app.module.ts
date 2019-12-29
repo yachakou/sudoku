@@ -20,7 +20,7 @@ const appRoutes: Routes = [
     component: HomeComponent
   },
   {
-    path: 'game',
+    path: 'game/:level',
     component: GameComponent
   },
   { path: '',

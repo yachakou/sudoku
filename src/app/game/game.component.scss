@@ -4,6 +4,7 @@ $color-cell-selected: #bce1e8;
 $color-value-selection: #95d3e4;
 $border-color: black;
 
+
 .cell {
   display: flex;
   flex: 1 1 calc(100% / 9 - 2px); // 9 items per line
@@ -100,4 +101,14 @@ $border-color: black;
       border-bottom: 1px solid $border-color;
     }
   }
+
+ 
+}
+
+.error{
+  color: red;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-weight: bold;
 }

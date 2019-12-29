@@ -4,6 +4,7 @@ export class Case {
     public colonne: Set<Case>;
     public care: Set<Case>;
     public peutEtreRemplie = false;
+    public estSelectionnee = false;
 
 
 

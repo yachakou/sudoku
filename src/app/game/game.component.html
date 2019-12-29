@@ -1,10 +1,23 @@
 
+<p *ngIf="nbErreurs" class="error">Nombre d'erreur : {{nbErreurs}}</p>
+
 <div class="board">
-    <ng-container *ngFor="let ligne of cases">
-      <ng-container *ngFor="let cell of ligne">
-        <div class="cell" >
-          <span *ngIf="cell.aAfficher">{{cell.valeur}}</span>
-        </div>
-      </ng-container>
+  <ng-container *ngFor="let ligne of cases">
+    <ng-container *ngFor="let cell of ligne">
+      <div class="cell" [class.selected]="cell.estSelectionnee" (click)="caseSelectionner(cell)">
+        <span *ngIf="cell.aAfficher">{{cell.valeur}}</span>
+      </div>
     </ng-container>
+  </ng-container>
+</div>
+
+
+
+<div class="value-selection">
+
+<ng-container *ngFor="let valeur of valeurPossible">
+  <div class="cell" (click)="valeurChoisi(valeur)">
+    <span>{{valeur}}</span>
   </div>
+</ng-container>
+</div>
