@@ -4,7 +4,7 @@
 <div class="board">
   <ng-container *ngFor="let ligne of cases">
     <ng-container *ngFor="let cell of ligne">
-      <div class="cell" [class.selected]="cell.estSelectionnee" (click)="caseSelectionner(cell)">
+      <div class="cell" [class.selected]="cell.estSelectionnee" [class.highlighted]="cell.highlighted" (click)="caseSelectionner(cell)">
         <span *ngIf="cell.aAfficher">{{cell.valeur}}</span>
       </div>
     </ng-container>

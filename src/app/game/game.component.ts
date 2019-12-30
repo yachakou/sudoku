@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Case } from '../case';
+import { Case } from '../model/case';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class GameComponent implements OnInit {
 
-  @Input() level: number;
+  private level: number;
 
   private cases: Case[][];
   private casesArray: Case[] = [];
@@ -20,7 +20,7 @@ export class GameComponent implements OnInit {
   private readonly MAX_VALUE: number = 9;
   private readonly DEFAULT_VALUE: number = 0;
   private caseSelectionne: Case;
-  private nbErreurs:number = 0;
+  private nbErreurs: number = 0;
 
 
   constructor(private route: ActivatedRoute) {
@@ -30,12 +30,10 @@ export class GameComponent implements OnInit {
 
     this.cases = [];
 
-    // on creer 9 cases 
-
-    for (let x = this.MIN_VALUE; x < this.MAX_VALUE; x++) {
+    for (let x = 0; x < 9; x++) {
       this.cases[x] = [];
-      for (let y = this.MIN_VALUE; y < this.MAX_VALUE; y++) {
-        let a = new Case(x, y, this.DEFAULT_VALUE);
+      for (let y = 0; y < 9; y++) {
+        const a = new Case(x, y);
         this.cases[x][y] = a;
         this.casesArray.push(a);
       }
@@ -45,7 +43,6 @@ export class GameComponent implements OnInit {
       c.ligne = this.determinerLigne(c);
       c.colonne = this.determinerColone(c);
       c.care = this.determinerCarre(c);
-
     });
 
     this.assignerValeursAuxCellule(this.casesArray.slice());
@@ -54,42 +51,24 @@ export class GameComponent implements OnInit {
       for (let i = 0; i < this.level; i++) {
         const cell = row[this.getRandomNumber(0, 9)];
         cell.hide();
-        cell.peutEtreRemplie = true;
+        cell.aAfficher = false;
         this.valeurPossible.add(cell.valeur);
       }
     });
 
-    console.log(this.cases);
   }
 
   determinerLigne(c: Case): Set<Case> {
-
-    let ligne = c.positionX;
-
-    let resulat = new Set<Case>();
-
-    this.casesArray.forEach(element => {
-      if ((element.positionX == ligne)) {
-        resulat.add(element);
-      }
-    });
-    resulat.delete(c);
-    return resulat;
+    const neighbors = new Set<Case>();
+    this.cases[c.positionX].filter((s) => s !== c).forEach((v) => neighbors.add(v));
+    return neighbors;
   }
 
   determinerColone(c: Case): Set<Case> {
-
-    let colonne = c.positionY;
-
-    let resulat = new Set<Case>();
-
-    this.casesArray.forEach(element => {
-      if ((element.positionY == colonne)) {
-        resulat.add(element);
-      }
-    });
-    resulat.delete(c);
-    return resulat;
+    const neighbors = new Set<Case>();
+    this.cases.forEach((row) => neighbors.add(row[c.positionY]));
+    neighbors.delete(c);
+    return neighbors;
   }
 
   determinerCarre(c: Case): Set<Case> {
@@ -111,7 +90,7 @@ export class GameComponent implements OnInit {
   assignerValeursAuxCellule(cellules: Case[]) {
     const cell = cellules.shift();
     const possibleValues = this.shuffleArray(this.getPossibleValuesForCell(cell));
-
+ 
     for (const value of possibleValues) {
       cell.valeur = value;
 
@@ -123,13 +102,17 @@ export class GameComponent implements OnInit {
         return true;
       }
 
+      //cell.valeur = 0;
+
     }
+    cellules.unshift(cell);
+    return false;
   }
 
 
   private getPossibleValuesForCell(cell: Case): number[] {
     const possibleValues: number[] = [];
-    for (let i = this.MIN_VALUE; i <= this.MAX_VALUE; i++) {
+    for (let i = 1; i <= 9; i++) {
       possibleValues.push(i);
     }
 
@@ -138,7 +121,6 @@ export class GameComponent implements OnInit {
     cell.colonne.forEach((c) => neighborValues.push(c.valeur));
     cell.care.forEach((c) => neighborValues.push(c.valeur));
 
-    // For each value found in neighbors, wipe the entry from the possible options
     neighborValues.forEach((value) => {
       const index = possibleValues.indexOf(value);
       if (index !== -1) {
@@ -165,27 +147,57 @@ export class GameComponent implements OnInit {
   }
 
   ngOnInit() {
-   }
+  }
 
   caseSelectionner(caseSelectionner: Case) {
     if (this.caseSelectionne) {
       this.caseSelectionne.estSelectionnee = false;
     }
-    if (caseSelectionner.peutEtreRemplie) {
+    if (!caseSelectionner.aAfficher) {
+      this.reinitialiserHighLight();
+      
+      for (let i = 0; i < this.cases.length; i++) {
+          this.cases[caseSelectionner.positionX][i].highlighted = true;
+          this.cases[i][caseSelectionner.positionY].highlighted = true;
+      }
+      
       caseSelectionner.estSelectionnee = !caseSelectionner.estSelectionnee;
       this.caseSelectionne = caseSelectionner;
-    }
-    console.log(caseSelectionner);
+    } 
 
   }
 
-  valeurChoisi(n:number){
+  reinitialiserHighLight(){
+
+    for (let i = 0; i < this.cases.length; i++) {
+      for (let y = 0; y < this.cases[i].length; y++) {
+            this.cases[i][y].highlighted =false;
+      }
+    } 
+  }
+
+  valeurChoisi(n: number) {
     if (this.caseSelectionne) {
-      if(this.caseSelectionne.valeur == n){
+      if (this.caseSelectionne.valeur == n) {
         this.caseSelectionne.aAfficher = true;
+        this.verifierSiNombreDoitEtreAfficher(n);
       } else {
-        this.nbErreurs ++;
+        this.nbErreurs++;
       }
     }
   }
+
+
+  verifierSiNombreDoitEtreAfficher(n: number) {
+    let nbDispo = 0;
+    this.casesArray.forEach((c) => {
+      if (c.valeur == n && c.aAfficher) {
+        nbDispo++;
+      }
+    });
+    if (nbDispo == this.MAX_VALUE) {
+      this.valeurPossible.delete(n);
+    }
+  }
+
 }
