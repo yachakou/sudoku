@@ -21,7 +21,7 @@ export class GameComponent implements OnInit {
   private readonly DEFAULT_VALUE: number = 0;
   private caseSelectionne: Case;
   private nbErreurs: number = 0;
-
+  private gagner: boolean = false;
 
   constructor(private route: ActivatedRoute) {
 
@@ -90,7 +90,7 @@ export class GameComponent implements OnInit {
   assignerValeursAuxCellule(cellules: Case[]) {
     const cell = cellules.shift();
     const possibleValues = this.shuffleArray(this.getPossibleValuesForCell(cell));
- 
+
     for (const value of possibleValues) {
       cell.valeur = value;
 
@@ -155,25 +155,25 @@ export class GameComponent implements OnInit {
     }
     if (!caseSelectionner.aAfficher) {
       this.reinitialiserHighLight();
-      
+
       for (let i = 0; i < this.cases.length; i++) {
-          this.cases[caseSelectionner.positionX][i].highlighted = true;
-          this.cases[i][caseSelectionner.positionY].highlighted = true;
+        this.cases[caseSelectionner.positionX][i].highlighted = true;
+        this.cases[i][caseSelectionner.positionY].highlighted = true;
       }
-      
+
       caseSelectionner.estSelectionnee = !caseSelectionner.estSelectionnee;
       this.caseSelectionne = caseSelectionner;
-    } 
+    }
 
   }
 
-  reinitialiserHighLight(){
+  reinitialiserHighLight() {
 
     for (let i = 0; i < this.cases.length; i++) {
       for (let y = 0; y < this.cases[i].length; y++) {
-            this.cases[i][y].highlighted =false;
+        this.cases[i][y].highlighted = false;
       }
-    } 
+    }
   }
 
   valeurChoisi(n: number) {
@@ -198,6 +198,11 @@ export class GameComponent implements OnInit {
     if (nbDispo == this.MAX_VALUE) {
       this.valeurPossible.delete(n);
     }
+    if (this.valeurPossible.size == 0) {
+      this.gagner = true;
+    }
   }
+
+
 
 }

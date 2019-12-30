@@ -1,5 +1,6 @@
 
 <p *ngIf="nbErreurs" class="error">Nombre d'erreur : {{nbErreurs}}</p>
+<p *ngIf="gagner" class="succes">Vous avez gagner !</p>
 
 <div class="board">
   <ng-container *ngFor="let ligne of cases">
